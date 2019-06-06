@@ -1,0 +1,21 @@
+{
+    "name":"DeepCtrlF",
+    "version":"1.0",
+    "description":"ctrl f that also searches links in webpage",
+    "background": {
+        "scripts":["background.js"],
+        "persistent":false
+    },
+    "permissions": [
+        "contextMenus",
+        "storage",
+        "declarativeContent",
+        "activeTab"
+    ],
+    "page_action": {
+        "default_popup": "popup.html"
+      },
+      "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'",
+    "manifest_version":2
+
+}
