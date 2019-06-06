@@ -13,7 +13,8 @@
         "activeTab"
     ],
     "page_action": {
-        "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "default_icon": "icon.png"
       },
       "content_security_policy": "script-src 'self' https://ajax.googleapis.com; object-src 'self'",
     "manifest_version":2
