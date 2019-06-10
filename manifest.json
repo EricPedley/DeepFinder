@@ -4,15 +4,18 @@
     "description":"ctrl f that also searches links in webpage",
     "background": {
         "scripts":["background.js"],
-        "persistent":false
+        "persistent":true
     },
     "permissions": [
+        "https://*/*",
+    "http://*/*",
         "contextMenus",
         "storage",
         "declarativeContent",
         "activeTab"
     ],
-    "page_action": {
+      "browser_action": {
+        "default_title": "Inject!",
         "default_popup": "popup.html",
         "default_icon": "icon.png"
       },
