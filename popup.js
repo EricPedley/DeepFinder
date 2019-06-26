@@ -1,14 +1,17 @@
 
 var results;
+chrome.tabs.getSelected(null,function(tab){
+    chrome.tabs.executeScript(
+        tab.id,
+        { file: 'content.js' }
+    );
+});
 $(document).ready(function () {
     $("#textbox").keypress(function (event) {
         if (event.keyCode === 13) {
             alert("event seen")
             chrome.tabs.getSelected(null, function (tab) {
-                chrome.tabs.executeScript(
-                    tab.id,
-                    { file: 'content.js' }
-                );
+                
                 let search = $("#textbox").val();
                 chrome.tabs.sendMessage(tab.id, search);
                 // chrome.tabs.executeScript(
