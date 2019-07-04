@@ -1,5 +1,4 @@
 
-
 chrome.runtime.onInstalled.addListener(function () {
   chrome.contextMenus.create({
     "id": "sampleContextMenu",
@@ -7,4 +6,3 @@ chrome.runtime.onInstalled.addListener(function () {
     "contexts": ["selection"]
   });
 });
-
