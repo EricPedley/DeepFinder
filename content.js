@@ -10,16 +10,23 @@ chrome.runtime.onMessage.addListener(
 		var itemsStarted = 0;
 		var itemsCompleted = 0;
 		Array.from(linkList).forEach(async function (link) {
-			if (!link.href.includes("#")) {
+			if (!link.href.includes("#")&&link.href.includes("https")) {
 				itemsStarted++;
 				$.get(link.href, null, function (text) {
 					itemsCompleted++;
-					if (null !== text.match(new RegExp('(?<!<[^>]*)' + request.greeting, "g"))) {
+					let regex;
+					if(request.checkboxStatus)
+						regex = new RegExp('(?<!<[^>]*)' + request.greeting, "g");
+					else
+						regex = new RegExp('(?<!<[^>]*)' + request.greeting, "gi")
+					if (null !== text.match(regex)) {
 						console.log(link.href);
 						externalPageHTMLs.push(link.href);
 					}
-					if (itemsStarted == itemsCompleted)
+					if (itemsStarted == itemsCompleted) {
 						sendResponse(externalPageHTMLs);
+						break;
+					}
 				})
 
 			}

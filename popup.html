@@ -1,12 +1,50 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <script src = "jquery.min.js"></script>
-    </head>
-  <body>
-    <script src="popup.js"></script>
-    <input type = 'text' id = 'textbox'></input>
-    <input type = 'radio' id = 'case'></input>Case Sensitive
-    <div id = "putLinksHere"></div>
-  </body>
+<style>
+  label {
+    display: block;
+    padding-left: 15px;
+    text-indent: -15px;
+  }
+
+  #case {
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    margin: 0;
+    vertical-align: bottom;
+    position: relative;
+    top: -1px;
+    *overflow: hidden;
+  }
+
+  color {
+    padding: 0;
+  }
+</style>
+
+<head>
+  <script src="jquery.min.js"></script>
+</head>
+
+<body>
+  <script src="popup.js"></script>
+  <script src="jscolor.js"></script>
+  <center>
+    Keyword to search for:
+    <input type='text' id='textbox'></input>
+    <label>
+      <input type='checkbox' id='case'></input>
+      Case Sensitive
+    </label>
+    <button id = "color" class = "jscolor {valueElement:null,value:'ffff00', height:50, width:100, padding:0, shadow:false,
+    borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}"> Highlight Color</button>
+    
+
+    </button>
+  </center>
+  <div id="putLinksHere"></div>
+  <div style = "padding-top: 50px"></div>
+</body>
+
 </html>
