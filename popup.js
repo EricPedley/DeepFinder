@@ -18,16 +18,18 @@ $(document).ready(function () {
                         let forEachRan = false;
                         var winhref = response.pop();
                         response.forEach(async function (link, index) {
-                            forEachRan=true;
+                            forEachRan = true;
                             if (!link.includes("#")) {
 
                                 console.log(link);
-                                var regex = new RegExp('(?<!<[^>]*)' + search, (checked ? "g" : "gi"))
-                                $.get(link, null, function (text) {
-                                    if (null !== text.match(regex)) {
-                                        document.getElementById("putLinksHere").innerHTML += "<br> <a id = 'link" + index + "' href = '" + link + "'>" + link + "</a> <br>";
-                                    }
-                                });
+                                if (!link.includes("mailto")) {
+                                    var regex = new RegExp('(?<!<[^>]*)' + search, (checked ? "g" : "gi"))
+                                    $.get(link, null, function (text) {
+                                        if (null !== text.match(regex)) {
+                                            document.getElementById("putLinksHere").innerHTML += "<br> <a id = 'link" + index + "' href = '" + link + "'>" + link + "</a> <br>";
+                                        }
+                                    });
+                                }
                             }
                         });
                         if (!forEachRan)
