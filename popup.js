@@ -13,7 +13,7 @@ $(document).ready(function () {
                         color: document.getElementById("color").style.backgroundColor
                     },
                     function (response) {
-                        console.log(response);
+                        console.log("response:"+response);
                         document.getElementById("putLinksHere").innerHTML = "<center>Links Containing Keyword:</center>";
                         let forEachRan = false;
                         var winhref = response.pop();
