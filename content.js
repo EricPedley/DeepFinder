@@ -8,7 +8,7 @@ chrome.runtime.onMessage.addListener(
 		var linkList=[];
 
 		Array.from(document.getElementsByTagName('a')).forEach(function(link) {//gets all links from page
-			linkList.push(link.href);
+			linkList.push({href: link.href, content: link.innerHTML});
 		});
 
 		var frames = Array.from(document.getElementsByTagName("frame"));
@@ -25,7 +25,7 @@ chrome.runtime.onMessage.addListener(
 				let frameLinks = Array.from(frameBody.getElementsByTagName("a"));//gets all links from frames on page
 				let c2=0;
 				frameLinks.forEach((link) => {
-					linkList.push(link.href);
+					linkList.push({href: link.href, innerHTML: link.innerHTML});
 					c2++;
 					if(c1==frames.length&&c2==frameLinks.length) {
 						linkList.push(window.location.href);

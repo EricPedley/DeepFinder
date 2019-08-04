@@ -1,4 +1,8 @@
 $(document).ready(function () {
+    $('body').on('click', 'a', function(){
+        chrome.tabs.create({url: $(this).attr('href')});
+        return false;
+      });
     $("#textbox").keypress(function (event) {
         if (event.keyCode === 13) {
             let search = $("#textbox").val();
@@ -13,20 +17,21 @@ $(document).ready(function () {
                         color: document.getElementById("color").style.backgroundColor
                     },
                     function (response) {
-                        console.log("response:"+response);
+                        console.log(response);
                         document.getElementById("putLinksHere").innerHTML = "<center>Links Containing Keyword:</center>";
                         let forEachRan = false;
                         var winhref = response.pop();
                         response.forEach(async function (link, index) {
                             forEachRan = true;
-                            if (!link.includes("#")) {
+                            //console.log(link);
+                            if (!link.href.includes("#")) {
 
-                                console.log(link);
-                                if (!link.includes("mailto")) {
+                                if (!link.href.includes("mailto")) {
                                     var regex = new RegExp('(?<!<[^>]*)' + search, (checked ? "g" : "gi"))
-                                    $.get(link, null, function (text) {
+                                    $.get(link.href, null, function (text) {
                                         if (null !== text.match(regex)) {
-                                            document.getElementById("putLinksHere").innerHTML += "<br> <a id = 'link" + index + "' href = '" + link + "'>" + link + "</a> <br>";
+                                            document.getElementById("putLinksHere").innerHTML += "<br> <a id = 'link" + index + "' href = '" + link.href + "'>" + link.innerHTML + "</a> <br>";
+                                           
                                         }
                                     });
                                 }
