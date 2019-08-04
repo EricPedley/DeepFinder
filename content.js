@@ -13,7 +13,6 @@ chrome.runtime.onMessage.addListener(
 
 		var frames = Array.from(document.getElementsByTagName("frame"));
 		frames = frames.concat(Array.from(document.getElementsByTagName("iframe")));
-		console.log(frames);
 		let c1=0;
 		frames.forEach(async function(frame) {
 			c1++;
