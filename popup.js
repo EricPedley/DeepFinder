@@ -8,7 +8,7 @@ $(document).ready(function () {
                 chrome.tabs.sendMessage(
                     tabs[0].id,
                     {
-                        greeting: search,
+                        searchTerm: search,
                         checkboxStatus: checked,
                         color: document.getElementById("color").style.backgroundColor
                     },
