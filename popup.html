@@ -7,7 +7,9 @@
     text-indent: -15px;
   }
 
-  #case {
+  
+
+  .checkbox {
     width: 13px;
     height: 13px;
     padding: 0;
@@ -33,9 +35,13 @@
   <center>
     Keyword to search for:
     <input type='text' id='textbox'></input>
-    <label>
-      <input type='checkbox' id='case'></input>
+    <label style = "padding-bottom:5px">
+      <input type='checkbox' id='case' class = "checkbox"></input>
       Case Sensitive
+    </label>
+    <label style = "padding-bottom:5px">
+      <input type='checkbox' id='words' class = "checkbox"></input>
+      Whole Words
     </label>
     <button id = "color" class = "jscolor {valueElement:'color_value',value:'ffff00', height:50, width:100, padding:0, shadow:false,
     borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}"> Highlight Color</button>

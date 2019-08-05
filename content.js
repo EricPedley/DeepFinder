@@ -2,7 +2,7 @@
 chrome.runtime.onMessage.addListener(
 	function (request, sender, sendResponse) {
 		let replacement = "<span style='background-color:"+request.color+"'>" + request.searchTerm + "</span>";//highlights keyword on page
-		let replaced = ("" + document.documentElement.innerHTML).replace(new RegExp('(?<!<[^>]*)' + request.searchTerm,(request.checkboxStatus? "g":"gi")), replacement);
+		let replaced = ("" + document.documentElement.innerHTML).replace(new RegExp('(?<!<[^>]*)' + (request.checkboxStatus[1]? "\b"+request.searchTerm+"\b": request.searchTerm),(request.checkboxStatus[0]? "g":"gi")), replacement);
 		document.documentElement.innerHTML = replaced;
 		
 		var linkList=[];
@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener(
 						sendResponse(linkList);
 					}
 				});//end of link getting code for frames
-				frame.document.body.innerHTML = frameBody.innerHTML.replace(new RegExp('(?<!<[^>]*)' + request.searchTerm,(request.checkboxStatus? "g":"gi")), replacement);//highlights keyword on frames
+				frame.document.body.innerHTML = frameBody.innerHTML.replace(new RegExp('(?<!<[^>]*)' + (request.checkboxStatus[1]? "\b"+request.searchTerm+"\b": request.searchTerm),(request.checkboxStatus[0]? "g":"gi")), replacement);//highlights keyword on frames
 				
 			};
 			
