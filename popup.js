@@ -23,16 +23,13 @@ $(document).ready(function () {
                         var winhref = response.pop();
                         response.forEach(async function (link, index) {
                             forEachRan = true;
-                            if (!link.href.includes("#")) {
-                                if (!link.href.includes("mailto")) {
+                            if (!link.href.includes("#") && !link.href.includes("mailto")) {
                                     var regex = new RegExp('(?<!<[^>]*)' + (wordsChecked? "\b"+search+"\b": search), (caseChecked ? "g" : "gi"))
                                     $.get(link.href, null, function (text) {
                                         if (null !== text.match(regex)) {
                                             document.getElementById("putLinksHere").innerHTML += "<br> <a id = 'link" + index + "' href = '" + link.href + "'>" + link.innerHTML + "</a> <br>";
-
                                         }
                                     });
-                                }
                             }
                         });
                         if (!forEachRan)
