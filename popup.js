@@ -59,6 +59,7 @@ $(document).ready(function () {
 processLinks = (linkList, numIterations) => {//linklist is what the jquery selector for tags returned
     if(numIterations>0) {
         let linkList2=[];
+        $('#linksHolder').innerHTML+='<div id = ">'
         Array.from(linkList).forEach(function(link,index) {
             $.get(winhref+link2.pathname,null,function(text){
                 let wordRegex = new RegExp('(?<!<[^>]*)' + (wordsChecked? "\b"+search+"\b": search), (caseChecked ? "g" : "gi"));
