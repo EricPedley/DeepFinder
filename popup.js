@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $('body').on('click', 'a', function () {
+    $('body').on('click', 'a', function () {//makes all a tags open new tab when clicked on
         chrome.tabs.create({ url: $(this).attr('href') });
         return false;
     });
