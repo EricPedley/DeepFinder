@@ -1,16 +1,12 @@
-
+console.log("this better be happening");
 chrome.runtime.onMessage.addListener(
 	function (request, sender, sendResponse) {
+		console.log("message received, stupid");
 		let replacement = "<span style='background-color:"+request.color+"'>" + request.searchTerm + "</span>";//highlights keyword on page
 		let replaced = ("" + document.documentElement.innerHTML).replace(new RegExp('(?<!<[^>]*)' + (request.checkboxStatus[1]? "\b"+request.searchTerm+"\b": request.searchTerm),(request.checkboxStatus[0]? "g":"gi")), replacement);
 		document.documentElement.innerHTML = replaced;
 		
 		var linkList=[];
-
-		Array.from(document.getElementsByTagName('a')).forEach(function(link) {//gets all links from page
-			linkList.push({href: link.href, content: link.innerHTML});
-		});
-
 		var frames = Array.from(document.getElementsByTagName("frame"));
 		frames = frames.concat(Array.from(document.getElementsByTagName("iframe")));
 		let c1=0;
@@ -35,6 +31,17 @@ chrome.runtime.onMessage.addListener(
 				
 			};
 			
+		});
+		var aTags = document.getElementsByTagName('a');
+		
+		Array.from(aTags).forEach(function(link,index) {//gets all links from page
+			linkList.push({href: link.href, content: link.innerHTML});
+			console.log(index+"|"+aTags.length-1+"|"+c1);
+			if(index===aTags.length-1&&c1===0) {
+				console.log(linkList);
+				linkList.push(window.location.href);
+				sendResponse(linkList);
+			}
 		});
 
 		

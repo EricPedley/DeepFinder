@@ -20,8 +20,8 @@
     *overflow: hidden;
   }
 
-  color {
-    padding: 0;
+  #textbox {
+    width: 200px;
   }
 </style>
 
@@ -35,13 +35,20 @@
   <center>
     Keyword to search for:
     <input type='text' id='textbox'></input>
-    <label style = "padding-bottom:5px">
+    <label style = "padding-bottom:5px; margin-top:20px">
       <input type='checkbox' id='case' class = "checkbox"></input>
       Case Sensitive
     </label>
-    <label style = "padding-bottom:5px">
+    <label style = "padding-bottom:5px; margin-bottom:20px">
       <input type='checkbox' id='words' class = "checkbox"></input>
       Whole Words
+    </label>
+    <label style = "padding-bottom:5px; margin-bottom:20px">
+        <select id = "recursionNum">
+          <option value = "1">1</option>
+          <option value = "2">2</option>
+        </select>
+      Number of links deep
     </label>
     <button id = "color" class = "jscolor {valueElement:'color_value',value:'ffff00', height:50, width:100, padding:0, shadow:false,
     borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}"> Highlight Color</button>
@@ -49,7 +56,8 @@
 
     </button>
   </center>
-  <div id="putLinksHere"></div>
+  <div id="putLinksHere1"></div>
+  <div id="putLinksHere2"></div>
   <div style = "padding-top: 50px"></div>
 </body>
 
