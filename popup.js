@@ -33,7 +33,7 @@ $(document).ready(function () {
                                         let links2 = $('a', docObj);
                                         console.log(links2);
                                         Array.from(links2).forEach(function(link2, index2) {
-                                            let openableLink = winhref+link2.pathname;
+                                            let openableLink = winhref+link2.pathname;//link that is usable by the jquery get function
                                             if(!openableLink.includes("#") && !openableLink.includes("mailto")) {
                                                 $.get(openableLink,null,function(text2) {
                                                     if (null !== text2.match(wordRegex)) {
