@@ -1,7 +1,7 @@
 {
-    "name":"DeepCtrlF",
+    "name":"DeepFinder",
     "version":"1.0",
-    "description":"ctrl f that also searches links in webpage",
+    "description":"Finder that also searches links in webpage",
     "background": {
         "scripts":["background.js"],
         "persistent":true
