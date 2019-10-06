@@ -59,11 +59,12 @@ $(document).ready(function () {
 processLinks = (linkList, numIterations) => {//linklist is what the jquery selector for tags returned
     if(numIterations>0) {
         let linkList2=[];
-        $('#linksHolder').innerHTML+='<div id = ">'
+        $('#linksHolder').innerHTML+='<div>'
         Array.from(linkList).forEach(function(link,index) {
             $.get(winhref+link2.pathname,null,function(text){
                 let wordRegex = new RegExp('(?<!<[^>]*)' + (wordsChecked? "\b"+search+"\b": search), (caseChecked ? "g" : "gi"));
                 if(null!==text.matches(wordRegex)){
+                    $("#linksHolder").innerHTML+="<br> <a id = 'link" + index + "' href = '" + link.href + "'>" + link.innerHTML + "</a> <br>";
                     //add link to list
                 }
                 var docObj = $('<div></div>');//start of recursive step
