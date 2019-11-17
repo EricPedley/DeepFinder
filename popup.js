@@ -39,10 +39,13 @@ processLinks = (linkList, winhref, wordRegex, numIterations) => {//linklist is w
         Array.from(linkList).forEach(function (link, index) {//for each link on the page
             console.log(winhref);
             let linkNoHash = rmvHash(link.href);
-            if (winhref !== linkNoHash) {
+            if (winhref !== linkNoHash&&!linkNoHash.includes("mailto")) {
+                if(!link.href.includes("http")){
+                    link.href=winhref+link.href;
+                }
                 $.get(link.href, null, function (text) {//get website html code as variable text
                     let noHash = rmvHash(link.href);//the link without the hash at the end and the stuff after
-                    console.log("get called"+noHash);
+                    console.log(noHash+"is getting a get request from" + link.href + "on recursive iteration" + numIterations +", index "+index);
                     if(alreadyTested[noHash]) {//if this link has already been gone over don't do it again
                         return;
                     }
@@ -67,5 +70,10 @@ processLinks = (linkList, winhref, wordRegex, numIterations) => {//linklist is w
 };
 
 function rmvHash(string) {//removes everything following a "#" in a string, including the "#" itself
-    return string.substring(0, string.indexOf("#"));
+    let i = string.indexOf("#");
+    if(i===-1) {
+        return string
+    } else {
+        return string.substring(0,i);
+    }
 }
