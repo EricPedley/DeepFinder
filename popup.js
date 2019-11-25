@@ -23,33 +23,30 @@ $(document).ready(function () {
                         let wordRegex = new RegExp('(?<!<[^>]*)' + (wordsChecked ? "\b" + search + "\b" : search), (caseChecked ? "g" : "gi"));
                         let winhref = response.pop();
                         console.log("iterations: " + iterations);
-                        processLinks(response, winhref, wordRegex, iterations);
+                        processLinks(response, winhref, wordRegex, iterations, []);
                     });
             });
         }
 
     });
 });
-processLinks = (linkList, winhref, wordRegex, numIterations) => {//linklist is what the jquery selector for tags returned
+processLinks = (linkList, winhref, wordRegex, numIterations, alreadyOpened) => {//linklist is what the jquery selector for tags returned
     
     if (numIterations > 0) {
         console.log(numIterations);
-        document.getElementById("linksHolder").innerHTML += "<br>BRuh work already smh</br>";
-        let alreadyTested = [];
+        document.getElementById("linksHolder").innerHTML += "<br>Links frome iteration "+numIterations+"</br>";
         Array.from(linkList).forEach(function (link, index) {//for each link on the page
             console.log(winhref);
-            let linkNoHash = rmvHash(link.href);
-            if (winhref !== linkNoHash&&!linkNoHash.includes("mailto")) {
+            let linkNoHash = rmvHash(link.href);//one of the links on the page
+            if (winhref !== linkNoHash&&!linkNoHash.includes("mailto")&&!alreadyOpened.includes(linkNoHash)) {//tests whether to consider opening this link on the open page
                 if(!link.href.includes("http")){
                     link.href=winhref+link.href;
                 }
                 $.get(link.href, null, function (text) {//get website html code as variable text
-                    let noHash = rmvHash(link.href);//the link without the hash at the end and the stuff after
-                    console.log(noHash+"is getting a get request from" + link.href + "on recursive iteration" + numIterations +", index "+index);
-                    if(alreadyTested[noHash]) {//if this link has already been gone over don't do it again
-                        return;
-                    }
-                    if (link.href != winhref && wordRegex.test(text)) {//if the website html contains the keyword
+                    alreadyOpened.push(link.href);
+                    let noHash = rmvHash(link.href);//the link being opened from the webpage without the hash at the end and the stuff after
+                    console.log(noHash+"is getting a get request from" + winhref + "on recursive iteration" + numIterations +", index "+index);
+                    if (wordRegex.test(text)) {//if the website html contains the keyword
                         document.getElementById("linksHolder").innerHTML += "<br> <a id = 'link" + index + "' href = '" + link.href + "'>" + link.innerHTML + "</a> <br>";//add to html of popup
                     }
                     alreadyTested[noHash]=true;
@@ -59,7 +56,7 @@ processLinks = (linkList, winhref, wordRegex, numIterations) => {//linklist is w
                         linkList2.push({href: match[1], innerHTML: match[2]});
                     }
                     console.log(linkList2);
-                    processLinks(linkList2, winhref, wordRegex, numIterations - 1);//take a recursive step using the list of all a tags from this page
+                    processLinks(linkList2, linkNoHash, wordRegex, numIterations - 1,alreadyChecked);//take a recursive step using the list of all a tags from this page
                 });
             }
         });
