@@ -34,29 +34,29 @@ processLinks = (linkList, winhref, wordRegex, numIterations, alreadyOpened) => {
     
     if (numIterations > 0) {
         console.log(numIterations);
-        document.getElementById("linksHolder").innerHTML += "<br>Links frome iteration "+numIterations+"</br>";
+        document.getElementById("linksHolder").innerHTML += "<br>Links from iteration "+numIterations+" at "+winhref+"</br>";
         Array.from(linkList).forEach(function (link, index) {//for each link on the page
             console.log(winhref);
             let linkNoHash = rmvHash(link.href);//one of the links on the page
             if (winhref !== linkNoHash&&!linkNoHash.includes("mailto")&&!alreadyOpened.includes(linkNoHash)) {//tests whether to consider opening this link on the open page
-                if(!link.href.includes("http")){
+                if(!link.href.includes("http")) {
                     link.href=winhref+link.href;
                 }
                 $.get(link.href, null, function (text) {//get website html code as variable text
                     alreadyOpened.push(link.href);
                     let noHash = rmvHash(link.href);//the link being opened from the webpage without the hash at the end and the stuff after
-                    console.log(noHash+"is getting a get request from" + winhref + "on recursive iteration" + numIterations +", index "+index);
+                    //console.log(noHash+"is getting a get request from" + winhref + "on recursive iteration" + numIterations +", index "+index);
                     if (wordRegex.test(text)) {//if the website html contains the keyword
                         document.getElementById("linksHolder").innerHTML += "<br> <a id = 'link" + index + "' href = '" + link.href + "'>" + link.innerHTML + "</a> <br>";//add to html of popup
                     }
-                    alreadyTested[noHash]=true;
                     let linkList2 = [];
                     let matches = text.matchAll(/<a.+?href="([^"]+)".*?>(.+?)<\/a>/sg);//regex tester: https://regex101.com/r/fMMH7H/1/
                     for(const match of matches) {
                         linkList2.push({href: match[1], innerHTML: match[2]});
                     }
-                    console.log(linkList2);
-                    processLinks(linkList2, linkNoHash, wordRegex, numIterations - 1,alreadyChecked);//take a recursive step using the list of all a tags from this page
+                    //console.log(linkList2);
+                    console.log(alreadyOpened);
+                    processLinks(linkList2, linkNoHash, wordRegex, numIterations - 1,alreadyOpened);//take a recursive step using the list of all a tags from this page
                 });
             }
         });
