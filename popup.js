@@ -17,40 +17,8 @@ $(document).ready(function () {
                         checkboxStatus: [caseChecked,wordsChecked],
                         color: document.getElementById("color").style.backgroundColor
                     },
-                    function (response) {//response is an array containing the hrefs and innerhtmls of all the links on the page
-                        document.getElementById("putLinksHere1").innerHTML = "<center>Links Containing Keyword:</center>";
-                        let forEachRan = false;
-                        var winhref = response.pop();
-                        winhref = winhref.substring(0,winhref.indexOf("/",winhref.indexOf("//")+2));
-                        console.log(winhref);
-                        response.forEach(async function (link, index) {//this loop uses get method of jquery to get innerhtml of each link in the outer loop
-                            forEachRan = true;
-                            if (!link.href.includes("#") && !link.href.includes("mailto")) {
-                                    let wordRegex = new RegExp('(?<!<[^>]*)' + (wordsChecked? "\b"+search+"\b": search), (caseChecked ? "g" : "gi"));
-                                    $.get(link.href, null, function (text) {
-                                        var docObj = $('<div></div>');//start of recursive step
-                                        docObj.html(text);
-                                        let links2 = $('a', docObj);
-                                        console.log(links2);
-                                        Array.from(links2).forEach(function(link2, index2) {
-                                            let openableLink = winhref+link2.pathname;//link that is usable by the jquery get function
-                                            if(!openableLink.includes("#") && !openableLink.includes("mailto")) {
-                                                $.get(openableLink,null,function(text2) {
-                                                    if (null !== text2.match(wordRegex)) {
-                                                        document.getElementById("putLinksHere2").innerHTML += "<br> <a id = 'link2" + index2 + "' href = '" + openableLink + "'>" + link2.innerHTML + "</a> <br>";
-                                                    }
-                                                });
-                                            }
-                                        });//end of recursive step
-                                        if (null !== text.match(wordRegex)) {
-                                            document.getElementById("putLinksHere1").innerHTML += "<br> <a id = 'link" + index + "' href = '" + link.href + "'>" + link.innerHTML + "</a> <br>";
-                                        }
-                                    });
-                            }
-                        });
-                        if (!forEachRan)
-                            document.getElementById("putLinksHere1").innerHTML = "<center>Keyword not found in links</center>";
-                    });
+                    doLinks
+                );
             });
         }
 
@@ -72,9 +40,15 @@ processLinks = (linkList, numIterations) => {//linklist is what the jquery selec
                 processLinks($('a', docObj),numIterations-1);
             });
         });
-        
-    
-    
         return linkList2;
     }
 };
+
+function doLinks(linkList, iterations) {
+    if(iterations>0) {
+        Array.from(linkList).forEach(function(link) {
+            window.open(link.href);
+            break;
+        });
+    }
+}
