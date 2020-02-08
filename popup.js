@@ -22,7 +22,7 @@ $(document).ready(function () {
                         let wordRegex = new RegExp('(?<!<[^>]*)' + (wordsChecked ? "\b" + search + "\b" : search), (caseChecked ? "g" : "gi"));
                         let winhref = response.pop();
                         console.log(response);
-                        response.map(function (element) { element["iteration"] = iterations });
+                        response.map(function (element) { element["iteration"] = Number(iterations) });
 
                         getRecursive(winhref, response, [winhref], wordRegex);
 
@@ -35,7 +35,10 @@ $(document).ready(function () {
 /*
 Format for untestedlist:
 {
-    {href:"href string here", innerHTML:"innerhtml string here", iteration:"iteration number", parent:"parent page url"},
+    {href:"href string here", 
+    innerHTML:"innerhtml string here", 
+    iteration:"iteration number", 
+    parent:"parent page url"}, // used this to debug, can be removed
     *more elements w/ same structure as above*
 }
 iteration number explanation:
@@ -52,13 +55,17 @@ function getRecursive(winhref, untestedlist, testedlist, wordRegex) {//untestedl
             testedlist.push(href);
             console.log(testedlist);
             $.get(href, null, function (text) {
-                //console.log(`successful GET request on ${href}`);
+                console.log(`successful GET request on ${href}, iteration is ${link.iteration}`);
                 //do stuff to add keyword to popup html
                 if (wordRegex.test(text)) {//if the website html contains the keyword
                     //console.log("found link that contains keyword, adding to popup");
+                    if(href="http://localhost:5000/waiver.pdf") {
+                        console.log(text);
+                    }
                     document.getElementById("linksHolder").innerHTML += "<br> <a href = '" + link.href + "'>" + link.innerHTML + "</a> <br>";//add to html of popup
                 }
                 if (link.iteration > 1) {//if the iteration number of the link is over 1
+                    
                     //console.log("link iteration is greater than one");
                     let matches = text.matchAll(/<a.+?href="([^"]+)".*?>(.+?)<\/a>/sg);/*regex for all a tags on page
                     output format: 
@@ -67,7 +74,10 @@ function getRecursive(winhref, untestedlist, testedlist, wordRegex) {//untestedl
                         matches[n][1]: href of a tag
                         matches[n][2]: innerhtml of a tag
                     regex tester: https://regex101.com/r/fMMH7H/1/    */
+                    var length =0;
+                    console.log(`matches on ${href}:`, length);
                     for (const match of matches) {
+                        length++;
                         //console.log(`match: ${match}`);
                         let base = getBase(href);
                         let unprocessed = match[1];
@@ -76,7 +86,7 @@ function getRecursive(winhref, untestedlist, testedlist, wordRegex) {//untestedl
                         //     newhref = base + newhref;
                         //}
                         if (testedlist.indexOf(newhref) === -1) {
-                            untestedlist.push({ href: newhref, innerHTML: match[2], parent: base });
+                            untestedlist.push({ href: newhref, innerHTML: match[2], iteration: link.iteration-1, parent: base });
                             console.log(`pushing ${unprocessed} to list as ${newhref} from ${href} that has base ${base}, which came from regex match ${match}`);
                         }
                     }
