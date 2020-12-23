@@ -1,11 +1,14 @@
-$(document).ready(function () {
-    $('body').on('click', 'a', function () {//makes all a tags open new tab when clicked on
-        chrome.tabs.create({ url: $(this).attr('href') });
-        return false;
+document.addEventListener("DOMContentLoaded" ,function () {
+
+    Array.from(document.getElementsByTagName("a")).forEach( function (element) {//makes all a tags open new tab when clicked on
+        element.onclick=()=>{
+            chrome.tabs.create({ url: element.href });
+            return false;
+        }
     });
-    $("#textbox").keypress(function (event) {
+    document.querySelector("#textbox").addEventListener("keypress",function (event) {
         if (event.keyCode === 13) {
-            let search = $("#textbox").val();
+            let search = document.querySelector("#textbox").value;
             var caseChecked = document.getElementById("case").checked;
             var wordsChecked = document.getElementById("words").checked;
             var iterations = document.getElementById("recursionNum").value;
@@ -54,7 +57,7 @@ function getRecursive(winhref, untestedlist, testedlist, wordRegex) {//untestedl
             console.log(`the list doesn't already contain this link: ${href} from ${link.parent}, going to push it to list`);
             testedlist.push(href);
             console.log(testedlist);
-            $.get(href, null, function (text) {
+            fetch(href).then(res=>res.text()).then(function (text) {
                 console.log(`successful GET request on ${href}, iteration is ${link.iteration}`);
                 //do stuff to add keyword to popup html
                 if (wordRegex.test(text)) {//if the website html contains the keyword
@@ -62,7 +65,7 @@ function getRecursive(winhref, untestedlist, testedlist, wordRegex) {//untestedl
                     if(href="http://localhost:5000/waiver.pdf") {
                         console.log(text);
                     }
-                    document.getElementById("linksHolder").innerHTML += "<br> <a href = '" + link.href + "'>" + link.innerHTML + "</a> <br>";//add to html of popup
+                    document.getElementById("linksHolder").innerHTML += `<br> <a target="_blank" href = "${link.href}">${link.innerHTML}</a> <br>`;//add to html of popup
                 }
                 if (link.iteration > 1) {//if the iteration number of the link is over 1
                     
@@ -94,7 +97,7 @@ function getRecursive(winhref, untestedlist, testedlist, wordRegex) {//untestedl
                 } else {
                     getRecursive(winhref, untestedlist, testedlist, wordRegex);//call function again with same conditions, except untestedlist is one element shorter
                 }
-            }).fail(function (error) {//if the get request to the link fails, continue without searching for the keyword or more links
+            }).catch(function (error) {//if the get request to the link fails, continue without searching for the keyword or more links
                 console.log(error);
                 return getRecursive(winhref, untestedlist, testedlist, wordRegex);
             });

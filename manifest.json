@@ -21,7 +21,7 @@
       "content_scripts": [
         {
           "matches": ["http://*/*","https://*/*"],
-          "js":["jquery.min.js","content.js"]
+          "js":["content.js"]
         }
       ],
       "content_security_policy": "script-src 'self' 'unsafe-eval' https://ajax.googleapis.com; object-src 'self'",
