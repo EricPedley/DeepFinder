@@ -23,17 +23,62 @@ document.addEventListener("DOMContentLoaded" ,function () {
                     },
                     function (response) {//response is an array containing the hrefs and innerhtmls of all the links on the page
                         let wordRegex = new RegExp('(?<!<[^>]*)' + (wordsChecked ? "\b" + search + "\b" : search), (caseChecked ? "g" : "gi"));
-                        let winhref = response.pop();
+                        let winhref = response.pop();//don't know why this is here
                         console.log(response);
                         response.map(function (element) { element["iteration"] = Number(iterations) });
 
-                        getRecursive(winhref, response, [winhref], wordRegex);
-
+                        //getRecursive(winhref, response, [winhref], wordRegex);
+                        getIterative(response,wordRegex,iterations)
                     });
             });
         }
     });
 });
+
+/*
+linkQueue format:
+[
+    {
+        href: "the href ofthe link",
+        innerHTML: "the innerhtml of the link",
+        iteration: the iteration of the link. This is to prevent the loop from running forever.
+    },
+    {
+        more of the same formatted object
+    }
+]
+
+*/
+
+function getIterative(linkQueue,wordRegex,iterations) {//uses BFS to search every link
+    const usedList = []
+    while(linkQueue.length!=0) {
+        const currLink = linkQueue.pop()
+        fetch(currLink.href).then(res=>res.text()).then(text=> {
+            if (wordRegex.test(text)) {//if the website html contains the keyword
+                //console.log("found link that contains keyword, adding to popup");
+                const atag = document.createElement("a")
+                atag.innerHTML=currLink.innerHTML
+                atag.href=currLink.href
+                atag.target="_blank"
+                document.getElementById("linksHolder").appendChild(atag)
+            }
+            const matches = text.matchAll(/<a.+?href="([^"]+)".*?>(.+?)<\/a>/sg);
+            for(const match of matches) {
+                const href = match[1];
+                const innerHTML = match[2];
+                const base = getBase(href);
+                const processedHref = processLink(href, base);
+                if(currLink.iteration<iterations&&!usedList.includes(processedHref)){
+                    usedList.push(processedHref);
+                    linkQueue.push({href:processedHref,innerHTML:innerHTML,iteration:currLink.iteration-1});
+                }
+            }
+        }).catch(console.log)
+    }
+    document.getElementById("linksHolder").innerHTML += "Done searching links";
+}
+
 
 /*
 Format for untestedlist:
@@ -117,13 +162,14 @@ function getRecursive(winhref, untestedlist, testedlist, wordRegex) {//untestedl
  * return will be something like https://github.com/EricPedley
  */
 function processLink(url, base) {
-    let i = url.lastIndexOf("/");
-    if (i === url.length - 1) {// if there's stuff after the last slash
-        url = url.substring(0, i+1);//then delete that shit because without deleting it duplicate urls would be added to the tested list
-    }
-    if (url.includes("http")) {//if the link isn't external
+    //pretty sure this commented block was useless
+    // let i = url.lastIndexOf("/");
+    // if (i === url.length - 1) {// if the last character is a slash (what I typed before: if there's stuff after the last slash
+    //     url = url.substring(0, i+1);// then do nothing??? this only runs when i+1 ===url.length, so it does the substring from 0 to the length     what I typed before: then delete that shit because without deleting it duplicate urls would be added to the tested list
+    // }
+    if (url.includes("http")) {//if the link isn't relative to the site
         return url;//then it's complete, just return it
-    } else {//if it's an internal link
+    } else {//if it's a relative internal link
         return base+url;//concatenate it with the base url and return that
     }
 }
