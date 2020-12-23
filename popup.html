@@ -1,37 +1,13 @@
 <!DOCTYPE html>
 <html>
-<style>
-  label {
-    display: block;
-    padding-left: 15px;
-    text-indent: -15px;
-  }
-
-  
-
-  .checkbox {
-    width: 13px;
-    height: 13px;
-    padding: 0;
-    margin: 0;
-    vertical-align: bottom;
-    position: relative;
-    top: -1px;
-    *overflow: hidden;
-  }
-
-  #textbox {
-    width: 200px;
-  }
-</style>
 
 <head>
+  <link rel="stylesheet" href="style.css">
+  <script src="popup.js"></script>
+  <script src="jscolor.js"></script>
 </head>
 
 <body>
-  <script src="popup.js"></script>
-  <script src="jscolor.js"></script>
-  <center>
     Keyword to search for:
     <input type='text' id='textbox'></input>
     <label style = "padding-bottom:5px; margin-top:20px">
@@ -55,7 +31,6 @@
     
 
     </button>
-  </center>
   <div id="linksHolder"></div>
   <div style = "padding-top: 50px"></div>
 </body>
