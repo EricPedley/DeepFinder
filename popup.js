@@ -6,9 +6,9 @@ document.addEventListener("DOMContentLoaded" ,function () {
             return false;
         }
     });
-    document.querySelector("#textbox").addEventListener("keypress",function (event) {
+    document.querySelector("#textbox2").addEventListener("keypress",function (event) {
         if (event.keyCode === 13) {
-            let search = document.querySelector("#textbox").value;
+            let search = document.querySelector("#textbox2").value;
             var caseChecked = document.getElementById("case").checked;
             var wordsChecked = document.getElementById("words").checked;
             var iterations = document.getElementById("recursionNum").value;
@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded" ,function () {
                         let wordRegex = new RegExp('(?<!<[^>]*)' + (wordsChecked ? "\b" + search + "\b" : search), (caseChecked ? "g" : "gi"));
                         let winhref = response.pop();//don't know why this is here
                         console.log(response);
-                        response.map(function (element) { element["iteration"] = Number(iterations) });
+                        response.map(function (element) { element["iteration"] = 0 });
 
                         //getRecursive(winhref, response, [winhref], wordRegex);
                         getIterative(response,wordRegex,iterations)
@@ -49,12 +49,22 @@ linkQueue format:
 ]
 
 */
-
-function getIterative(linkQueue,wordRegex,iterations) {//uses BFS to search every link
+async function getIterative(linkQueue,wordRegex,iterations) {//uses BFS to search every link
     const usedList = []
+    /*
+    one problem is that this loop doesn't check if there are still fetch requests waiting for responses
+    so if it goes through sending all the requests before it gets any responses, it'll just end the loop
+    when there are still all the responses to be processed
+
+    FIX: used await so that the fetch requests happen in series instead of parallel. Slower but
+    not having to worry about bugs is better than performance.
+    */
+   let started=0,addressed=0,finished=0;//addressed is how many got to the callback of the promise(kinda confusing cause address also refers to memory)
     while(linkQueue.length!=0) {
         const currLink = linkQueue.pop()
-        fetch(currLink.href).then(res=>res.text()).then(text=> {
+        started++;
+        const doneFetching = await fetch(currLink.href).then(res=>res.text()).then(text=> {//used await to avoid the potential bug mentioned above
+            addressed++;
             if (wordRegex.test(text)) {//if the website html contains the keyword
                 //console.log("found link that contains keyword, adding to popup");
                 const atag = document.createElement("a")
@@ -71,11 +81,15 @@ function getIterative(linkQueue,wordRegex,iterations) {//uses BFS to search ever
                 const processedHref = processLink(href, base);
                 if(currLink.iteration<iterations&&!usedList.includes(processedHref)){
                     usedList.push(processedHref);
-                    linkQueue.push({href:processedHref,innerHTML:innerHTML,iteration:currLink.iteration-1});
+                    linkQueue.push({href:processedHref,innerHTML:innerHTML,iteration:currLink.iteration+1});//I had it do iteration-1 before, how did that not result in an infinite loop????
                 }
             }
+            return true
         }).catch(console.log)
+        if(doneFetching)
+            finished++;
     }
+    console.log(`started ${started}, ran callbacks for ${addressed}, finished ${finished}`)
     document.getElementById("linksHolder").innerHTML += "Done searching links";
 }
 
